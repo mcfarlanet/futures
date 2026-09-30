@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+  (function () {
+    var saved = localStorage.getItem('theme');
+    var theme = saved || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    document.documentElement.setAttribute('data-theme', theme);
+  })();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" id="theme-color-meta" content="#0b1b2b">
+<title>What Wasn't Built — Calgary Tower</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #0b1b2b;
+    --panel: #12253a;
+    --line: #4d7e9e;
+    --text: #edeee9;
+    --muted: #8aa0ae;
+    --accent: #e8a93c;
+    --on-accent: #1b1300;
+    --danger: #e2726b;
+  }
+
+  [data-theme="light"] {
+    --bg: #eef2f5;
+    --panel: #ffffff;
+    --line: #2f5772;
+    --text: #16273a;
+    --muted: #52697c;
+    --accent: #d98f26;
+    --danger: #b23b34;
+  }
+
+  * { box-sizing: border-box; }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-color: var(--bg);
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    padding-top: max(32px, env(safe-area-inset-top));
+    padding-bottom: max(56px, env(safe-area-inset-bottom));
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  main {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  #theme-toggle {
+    position: fixed;
+    top: max(16px, env(safe-area-inset-top));
+    right: max(16px, env(safe-area-inset-right));
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    color: var(--text);
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    z-index: 10;
+  }
+  #theme-toggle svg { width: 18px; height: 18px; }
+  #theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .icon-moon { display: none; }
+  [data-theme="light"] .icon-sun { display: none; }
+  [data-theme="light"] .icon-moon { display: block; }
+
+  .mark { display: block; margin: 0 auto 20px; width: 96px; height: 96px; }
+  .mark path {
+    fill: none;
+    stroke: var(--line);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 400;
+    stroke-dashoffset: 400;
+    animation: draw 1.6s ease-out forwards;
+  }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .mark path { animation: none; stroke-dashoffset: 0; }
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: clamp(22px, 6vw, 28px);
+    line-height: 1.25;
+    text-align: center;
+    margin: 0 0 10px;
+  }
+
+  p.lede {
+    text-align: center;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0 0 28px;
+  }
+
+  form {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 20px;
+  }
+
+  label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+
+  textarea {
+    width: 100%;
+    min-height: 110px;
+    resize: vertical;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 16px;
+    padding: 12px;
+  }
+
+  textarea:focus, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 8px; gap: 12px; }
+  .count { font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .count.over { color: var(--danger); }
+
+  .guideline { font-size: 12px; color: var(--muted); line-height: 1.5; margin: 0; }
+
+  button[type="submit"] {
+    width: 100%;
+    margin-top: 18px;
+    min-height: 48px;
+    padding: 14px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--on-accent);
+    background: var(--accent);
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button[type="submit"]:disabled { opacity: 0.55; cursor: default; }
+
+  .status { margin-top: 14px; font-size: 13px; text-align: center; min-height: 18px; }
+  .status.error { color: var(--danger); }
+
+  .confirmation { display: none; text-align: center; padding: 32px 20px; }
+  .confirmation h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 20px; margin: 0 0 8px; }
+  .confirmation p { color: var(--muted); font-size: 14px; line-height: 1.6; margin: 0; }
+</style>
+</head>
+<body>
+
+<button id="theme-toggle" type="button" aria-label="Switch to light mode">
+  <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <circle cx="12" cy="12" r="4"/>
+    <line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/>
+    <line x1="4" y1="12" x2="2" y2="12"/><line x1="22" y1="12" x2="20" y2="12"/>
+    <line x1="5" y1="5" x2="6.5" y2="6.5"/><line x1="17.5" y1="17.5" x2="19" y2="19"/>
+    <line x1="5" y1="19" x2="6.5" y2="17.5"/><line x1="17.5" y1="6.5" x2="19" y2="5"/>
+  </svg>
+  <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </svg>
+</button>
+
+<main>
+  <svg class="mark" viewBox="0 0 100 100" role="img" aria-label="Line drawing of a tower">
+    <path d="M50 90 L50 20 M50 20 L30 55 M50 20 L70 55 M38 25 L62 25 L58 35 L42 35 Z"/>
+  </svg>
+
+  <h1>What wasn't built</h1>
+  <p class="lede">
+    If the Calgary Tower had gone up as something else entirely — what would it be?
+    Describe it below. Your idea becomes an AI-rendered image, then a short animation,
+    projected on the wall.
+  </p>
+
+  <form id="idea-form">
+    <label for="idea">Your idea</label>
+    <textarea id="idea" name="idea" maxlength="280"
+      placeholder="e.g. a greenhouse spiralling up through the clouds, tended by no one"></textarea>
+    <div class="row">
+      <span class="guideline">Keep it playful and public — friendly submissions only.</span>
+      <span class="count" id="count">0 / 280</span>
+    </div>
+    <button type="submit" id="submit-btn">Send your idea</button>
+    <div class="status" id="status"></div>
+  </form>
+
+  <div class="confirmation" id="confirmation">
+    <h2>Sent up.</h2>
+    <p>Your idea is being dreamed up right now. Watch the wall — it'll join the rotation shortly.</p>
+  </div>
+
+</main>
+
+<script>
+  /* ---------------------------------------------------------------------
+     CONFIGURATION — this is the only part to edit.
+
+     WEBHOOK_URL is the address the backend and hands it off. It's
+     left blank until we know where to put it — point it at our endpoint
+
+     This page POSTs a JSON body like:
+       { "idea": "<the text the visitor typed>", "submitted_at": "<ISO timestamp>" }
+
+     If the backend lives on a different domain, it will
+     need to allow cross-origin requests from this page's URL (a "CORS"
+     setting on the backend) or the fetch() call below will be blocked
+     by the visitor's browser.
+     --------------------------------------------------------------------- */
+  const WEBHOOK_URL = ""; // e.g. "https://your-domain.example.com/api/submit"
+
+  // How long (in milliseconds) a visitor must wait before submitting again
+  // from the same phone. Stored in localStorage — a friendly spam guard,
+  // not real security. Set to 0 to disable it entirely.
+  const COOLDOWN_MS = 60 * 1000;
+
+  const form = document.getElementById('idea-form');
+  const textarea = document.getElementById('idea');
+  const countEl = document.getElementById('count');
+  const statusEl = document.getElementById('status');
+  const submitBtn = document.getElementById('submit-btn');
+  const confirmationEl = document.getElementById('confirmation');
+  textarea.addEventListener('input', () => {
+    const len = textarea.value.length;
+    countEl.textContent = `${len} / 280`;
+    countEl.classList.toggle('over', len >= 280);
+  });
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    statusEl.textContent = '';
+    statusEl.classList.remove('error');
+
+    const idea = textarea.value.trim();
+
+    if (idea.length < 8) {
+      statusEl.textContent = 'Tell us a bit more — a few words at least.';
+      statusEl.classList.add('error');
+      return;
+    }
+
+    const lastSubmit = Number(localStorage.getItem('lastSubmitAt') || 0);
+    const waited = Date.now() - lastSubmit;
+    if (COOLDOWN_MS > 0 && waited < COOLDOWN_MS) {
+      const secondsLeft = Math.ceil((COOLDOWN_MS - waited) / 1000);
+      statusEl.textContent = `One idea at a time — try again in ${secondsLeft}s.`;
+      statusEl.classList.add('error');
+      return;
+    }
+
+    if (!WEBHOOK_URL) {
+      statusEl.textContent = "Form isn't connected to a backend yet (see WEBHOOK_URL in the code).";
+      statusEl.classList.add('error');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+
+    try {
+      const response = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idea, submitted_at: new Date().toISOString() })
+      });
+
+      if (!response.ok) throw new Error('Backend returned ' + response.status);
+
+      localStorage.setItem('lastSubmitAt', String(Date.now()));
+      form.style.display = 'none';
+      confirmationEl.style.display = 'block';
+
+    } catch (err) {
+      statusEl.textContent = "Couldn't send that — check your connection and try again.";
+      statusEl.classList.add('error');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send your idea';
+    }
+  });
+
+  const toggleBtn = document.getElementById('theme-toggle');
+  const themeColorMeta = document.getElementById('theme-color-meta');
+  const THEME_COLORS = { dark: '#0b1b2b', light: '#eef2f5' };
+
+  function reflectTheme(theme) {
+    themeColorMeta.setAttribute('content', THEME_COLORS[theme]);
+    toggleBtn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+  }
+
+  reflectTheme(document.documentElement.getAttribute('data-theme'));
+
+  toggleBtn.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    reflectTheme(next);
+  });
+</script>
+</body>
+</html>
