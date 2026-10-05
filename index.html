@@ -19,24 +19,31 @@
 
 <style>
   :root {
-    --bg: #0b1b2b;
-    --panel: #12253a;
-    --line: #4d7e9e;
-    --text: #edeee9;
-    --muted: #8aa0ae;
-    --accent: #e8a93c;
-    --on-accent: #1b1300;
-    --danger: #e2726b;
+    --bg: #0f2334;
+    --panel: #122c3e;
+    --line: #7ec9d1;
+    --text: #edf0ee;
+    --muted: #9ab0bc;
+    --accent: #f59d4d;
+    --on-accent: #1a1208;
+    --danger: #ef7a70;
+    --dot: #59d2c9;
+    --dot-deep: #2daaa4;
+    --input-bg: #122c3e;
   }
 
   [data-theme="light"] {
-    --bg: #eef2f5;
-    --panel: #ffffff;
-    --line: #2f5772;
-    --text: #16273a;
-    --muted: #52697c;
-    --accent: #d98f26;
-    --danger: #b23b34;
+    --bg: #f1773d;
+    --panel: #f3f0eb;
+    --line: #0d6d6d;
+    --text: #173547;
+    --muted: #4a5d6d;
+    --accent: #d58a2d;
+    --on-accent: #1d1308;
+    --danger: #b9473d;
+    --dot: #53cebd;
+    --dot-deep: #2ea49f;
+    --input-bg: #f5f4f0;
   }
 
   * { box-sizing: border-box; }
@@ -60,11 +67,29 @@
     padding-left: max(20px, env(safe-area-inset-left));
     padding-right: max(20px, env(safe-area-inset-right));
     transition: background-color 0.2s ease, color 0.2s ease;
+    position: relative;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: -10px;
+    height: 190px;
+    background-image: radial-gradient(circle, var(--dot) 0 12px, transparent 12.5px);
+    background-size: 24px 24px;
+    background-position: 0 0;
+    opacity: 0.95;
+    pointer-events: none;
+    z-index: 0;
   }
 
   main {
     width: 100%;
     max-width: 420px;
+    position: relative;
+    z-index: 1;
   }
 
   #theme-toggle {
@@ -137,7 +162,7 @@
     width: 100%;
     min-height: 110px;
     resize: vertical;
-    background: var(--bg);
+    background: var(--input-bg);
     border: 1px solid var(--line);
     border-radius: 3px;
     color: var(--text);
